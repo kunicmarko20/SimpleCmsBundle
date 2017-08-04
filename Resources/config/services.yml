@@ -1,0 +1,15 @@
+services:
+    # Custom route loaders
+    simple_cms.route_loader:
+        class: KunicMarko\SimpleCmsBundle\Routing\RouteLoader
+        arguments: [ "@doctrine.orm.entity_manager" ]
+        tags:
+            - { name: routing.loader }
+
+    simple_cms.routing_cache_handler.listener:
+        class: KunicMarko\SimpleCmsBundle\EventListener\RoutingCacheHandler
+        arguments: ["@kernel", "@request_stack"]
+        tags:
+            - { name: kernel.event_listener, event: sonata.admin.event.persistence.post_update, method: onPersistUpdateRemove }
+            - { name: kernel.event_listener, event: sonata.admin.event.persistence.post_persist, method: onPersistUpdateRemove }
+            - { name: kernel.event_listener, event: sonata.admin.event.persistence.post_remove, method: onPersistUpdateRemove }
