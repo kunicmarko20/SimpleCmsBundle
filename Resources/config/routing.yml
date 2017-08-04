@@ -1,0 +1,4 @@
+simple_cms:
+    resource: .
+    prefix:   /
+    type: simple_cms_route

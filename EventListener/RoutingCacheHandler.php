@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 use Symfony\Component\HttpKernel\KernelInterface;
+use KunicMarko\SimpleCmsBundle\Entity\Page;
 
 class RoutingCacheHandler
 {
@@ -32,9 +33,7 @@ class RoutingCacheHandler
      */
     private function isPage($object)
     {
-        //return $object instanceof Page;
-        //Check if object is your page
-        return true;
+        return $object instanceof Page;
     }
 
     /**
@@ -68,10 +67,10 @@ class RoutingCacheHandler
     {
         if($this->environment == 'dev') {
             return [
-                'appDevUrlGenerator.php',
-                'appDevUrlGenerator.php.meta',
-                'appDevUrlMatcher.php',
-                'appDevUrlMatcher.php.meta'
+                'appDevDebugProjectContainerUrlGenerator.php',
+                'appDevDebugProjectContainerUrlGenerator.php.meta',
+                'appDevDebugProjectContainerUrlMatcher.php',
+                'appDevDebugProjectContainerUrlMatcher.php.meta'
             ];
         } elseif ($this->environment == 'prod') {
             return [
@@ -92,10 +91,11 @@ class RoutingCacheHandler
 
         foreach ($cacheFiles as $file) {
             $filePath = $this->cacheDirectory .'/'. $file;
-            if(file_exists($filePath))
+            if (file_exists($filePath)) {
                 unlink($filePath) ?: $success = false;
-            else
+            } else {
                 $success = false;
+            }
         }
 
         return $success;

@@ -2,6 +2,7 @@
 
 namespace KunicMarko\SimpleCmsBundle\Routing;
 
+use KunicMarko\SimpleCmsBundle\Entity\Page;
 use Symfony\Component\Config\Loader\Loader;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Routing\RouteCollection;
@@ -9,13 +10,17 @@ use Symfony\Component\Routing\Route;
 
 class RouteLoader extends Loader
 {
-    private $entityManager;
+    /** @var \Doctrine\ORM\EntityRepository  */
+    private $pageRepository;
+    /** @var RouteCollection  */
+    private $routes;
 
     private static $loaded = false;
 
     public function __construct(EntityManager $manager)
     {
-        $this->entityManager = $manager;
+        $this->pageRepository = $manager->getRepository(Page::class);
+        $this->routes = new RouteCollection();
     }
 
     public function load($resource, $type = null)
@@ -24,24 +29,29 @@ class RouteLoader extends Loader
             throw new \RuntimeException('Do not load tree routes twice');
         }
 
-        $routes = new RouteCollection();
-
-        //load routes from db
-        $defaults = [
-            '_controller' => 'AppBundle:Default:index',
-            'id' => '13',
-        ];
-        $route = new Route('going/for/the/win', $defaults);
-        $routes->add('cms_route_13', $route);
-
+        $pages = $this->pageRepository->findAll();
+        $this->mapCustomPages($pages);
 
         self::$loaded = true;
 
-        return $routes;
+        return $this->routes;
+    }
+
+    private function mapCustomPages($pages)
+    {
+        /** @var Page $page */
+        foreach ($pages as $page) {
+            $defaults = [
+                '_controller' => 'KunicMarko\SimpleCmsBundle:Page:index',
+                'id' => $page->getId(),
+            ];
+            $route = new Route($page->getUrl(), $defaults);
+            $this->routes->add('simple_cms_page_' . $page->getId(), $route);
+        }
     }
 
     public function supports($resource, $type = null)
     {
-        return $type === 'simple_route';
+        return $type === 'simple_cms_route';
     }
 }
