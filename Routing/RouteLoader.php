@@ -7,6 +7,7 @@ use Symfony\Component\Config\Loader\Loader;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
+use KunicMarko\SimpleCmsBundle\Controller\PageController;
 
 class RouteLoader extends Loader
 {
@@ -42,8 +43,8 @@ class RouteLoader extends Loader
         /** @var Page $page */
         foreach ($pages as $page) {
             $defaults = [
-                '_controller' => 'KunicMarko\SimpleCmsBundle:Page:index',
-                'id' => $page->getId(),
+                '_controller' => 'SimpleCmsBundle:Page:index',
+                'pageId' => $page->getId(),
             ];
             $route = new Route($page->getUrl(), $defaults);
             $this->routes->add('simple_cms_page_' . $page->getId(), $route);

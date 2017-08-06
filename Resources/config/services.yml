@@ -13,3 +13,10 @@ services:
             - { name: kernel.event_listener, event: sonata.admin.event.persistence.post_update, method: onPersistUpdateRemove }
             - { name: kernel.event_listener, event: sonata.admin.event.persistence.post_persist, method: onPersistUpdateRemove }
             - { name: kernel.event_listener, event: sonata.admin.event.persistence.post_remove, method: onPersistUpdateRemove }
+
+    simple_cms.page.admin:
+        class: KunicMarko\SimpleCmsBundle\Admin\PageAdmin
+        arguments: [~, KunicMarko\SimpleCmsBundle\Entity\Page, SonataAdminBundle:CRUD]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: CMS, label: Page }
+

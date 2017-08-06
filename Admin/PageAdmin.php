@@ -36,6 +36,7 @@ class PageAdmin extends AbstractAdmin
             ->with('General')
             ->add('title')
             ->add('url')
+            ->add('template')
             ->add('pageBuilder', 'sonata_type_model_list', [
                 'btn_list' => false,
                 'btn_add' => "Add",

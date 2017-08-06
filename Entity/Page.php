@@ -56,19 +56,19 @@ class Page
 
     /**
      *
-     * @ORM\ManyToOne(targetEntity="SimplePageBuilderBundle\Entity\PageBuilder", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="KunicMarko\SimplePageBuilderBundle\Entity\PageBuilder", cascade={"persist"})
      * @ORM\JoinColumns({
      *     @ORM\JoinColumn(name="simple_page_builder", referencedColumnName="id", onDelete="SET NULL")
      * })
      */
     private $pageBuilder;
 
-    public function getId(): int
+    public function getId()
     {
         return $this->id;
     }
 
-    public function getTitle(): string
+    public function getTitle()
     {
         return $this->title;
     }
@@ -76,12 +76,12 @@ class Page
     /**
      * @param string $title
      */
-    public function setTitle(string $title)
+    public function setTitle($title)
     {
         $this->title = $title;
     }
 
-    public function getUrl(): string
+    public function getUrl()
     {
         return $this->url;
     }
@@ -89,7 +89,7 @@ class Page
     /**
      * @param string $url
      */
-    public function setUrl(string $url)
+    public function setUrl($url)
     {
         $this->url = $url;
     }
@@ -107,7 +107,7 @@ class Page
         $this->pageBuilder = $pageBuilder;
     }
 
-    public function getTemplate(): string
+    public function getTemplate()
     {
         return $this->template;
     }
@@ -115,7 +115,7 @@ class Page
     /**
      * @param string $template
      */
-    public function setTemplate(string $template)
+    public function setTemplate($template)
     {
         $this->template = $template;
     }
