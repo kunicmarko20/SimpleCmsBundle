@@ -8,6 +8,7 @@
 
 namespace KunicMarko\SimpleCmsBundle\Entity;
 
+use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -17,12 +18,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @package AppBundle\Entity
  * @ORM\Entity()
  * @UniqueEntity(fields="title", message="Title is already taken.")
- * @UniqueEntity(fields="url", message="Url is already taken.")
+ * @UniqueEntity(fields="path", message="Url is already taken.")
  * @ORM\Table(name="simple_cms_page")
+ * @ORM\HasLifecycleCallbacks()
  */
 
 class Page
 {
+
     /**
      * @var int
      *
@@ -36,9 +39,33 @@ class Page
     /**
      * @var string
      * @Assert\NotBlank()
+     * @Assert\Length(
+     *      max = 255,
+     *      maxMessage = "Name cannot be longer than {{ limit }} characters"
+     * )
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $name;
+
+    /**
+     * @var string
+     * @Assert\Length(
+     *      max = 255,
+     *      maxMessage = "Title cannot be longer than {{ limit }} characters"
+     * )
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $title;
+
+    /**
+     * @var string
+     * @Assert\Length(
+     *      max = 255,
+     *      maxMessage = "Meta Description cannot be longer than {{ limit }} characters"
+     * )
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $metaDescription;
 
     /**
      * @var string
@@ -49,10 +76,9 @@ class Page
 
     /**
      * @var string
-     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $url;
+    private $path;
 
     /**
      *
@@ -62,36 +88,44 @@ class Page
      * })
      */
     private $pageBuilder;
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
 
     public function getId()
     {
         return $this->id;
     }
 
-    public function getTitle()
+    public function getPath()
     {
-        return $this->title;
+        return $this->path;
     }
 
     /**
-     * @param string $title
+     * @param string $path
      */
-    public function setTitle($title)
+    public function setPath($path)
     {
-        $this->title = $title;
-    }
-
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * @param string $url
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
+        $this->path = '/'. ltrim($path, '/');
     }
 
     public function getPageBuilder()
@@ -118,5 +152,70 @@ class Page
     public function setTemplate($template)
     {
         $this->template = $template;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    public function getMetaDescription()
+    {
+        return $this->metaDescription;
+    }
+
+    /**
+     * @param string $metaDescription
+     */
+    public function setMetaDescription($metaDescription)
+    {
+        $this->metaDescription = $metaDescription;
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function onPersistUpdate()
+    {
+        if ($this->createdAt == null) {
+            $this->createdAt = new \DateTime();
+        }
+
+        $this->updatedAt = new \DateTime();
+
+        if ($this->path == null) {
+            $slugify = new Slugify();
+            $this->setPath($slugify->slugify($this->name));
+        }
+    }
+
+    public function __toString()
+    {
+        if ($this->name != null) {
+            return $this->name;
+        }
+        return 'Page';
     }
 }

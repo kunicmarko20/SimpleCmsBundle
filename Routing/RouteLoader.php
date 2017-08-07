@@ -38,7 +38,7 @@ class RouteLoader extends Loader
         return $this->routes;
     }
 
-    private function mapCustomPages($pages)
+    protected function mapCustomPages($pages)
     {
         /** @var Page $page */
         foreach ($pages as $page) {
@@ -46,7 +46,7 @@ class RouteLoader extends Loader
                 '_controller' => 'SimpleCmsBundle:Page:index',
                 'pageId' => $page->getId(),
             ];
-            $route = new Route($page->getUrl(), $defaults);
+            $route = new Route($page->getPath(), $defaults);
             $this->routes->add('simple_cms_page_' . $page->getId(), $route);
         }
     }

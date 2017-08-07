@@ -16,7 +16,7 @@ services:
 
     simple_cms.page.admin:
         class: KunicMarko\SimpleCmsBundle\Admin\PageAdmin
-        arguments: [~, KunicMarko\SimpleCmsBundle\Entity\Page, SonataAdminBundle:CRUD]
+        arguments: [~, KunicMarko\SimpleCmsBundle\Entity\Page, SimpleCmsBundle:PageAdminCRUD]
         tags:
             - { name: sonata.admin, manager_type: orm, group: CMS, label: Page }
 

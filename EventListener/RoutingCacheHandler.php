@@ -31,7 +31,7 @@ class RoutingCacheHandler
      * @param $object
      * @return bool
      */
-    private function isPage($object)
+    protected function isPage($object)
     {
         return $object instanceof Page;
     }
@@ -53,7 +53,7 @@ class RoutingCacheHandler
      * Removes the routing cache each time there is a change in node tree
      * so that the new routes get cached
      */
-    private function clearRouteCache()
+    public function clearRouteCache()
     {
         $cacheFiles = $this->getCachedRoutingFiles();
         $isSuccess = $this->removeRoutingCache($cacheFiles);
@@ -63,7 +63,7 @@ class RoutingCacheHandler
     /**
      * Returns array of routing cached files that need to be deleted based on environment
      */
-    private function getCachedRoutingFiles()
+    protected function getCachedRoutingFiles()
     {
         if($this->environment == 'dev') {
             return [
@@ -85,7 +85,7 @@ class RoutingCacheHandler
      * @param array $cacheFiles
      * @return bool
      */
-    private function removeRoutingCache($cacheFiles)
+    protected function removeRoutingCache($cacheFiles)
     {
         $success = true;
 
@@ -105,7 +105,7 @@ class RoutingCacheHandler
      * Adds flash message to request bag
      * @param bool $isSuccess
      */
-    private function addRemoveNotification($isSuccess)
+    protected function addRemoveNotification($isSuccess)
     {
         /** @var FlashBag $flashBag */
         $flashBag = $this->request->getSession()->getFlashBag();
