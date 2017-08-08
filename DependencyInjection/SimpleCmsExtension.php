@@ -15,6 +15,9 @@ class SimpleCmsExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        $configuration = new Configuration($container->getParameter('kernel.root_dir'));
+        $config = $this->processConfiguration($configuration, $configs);
+        $container->setParameter('simple_cms.template_directory', $config['template_directory']);
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
     }

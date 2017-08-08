@@ -6,10 +6,14 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Finder\Finder;
 
 class PageAdmin extends AbstractAdmin
 {
+
+    protected $templateDirectory;
 
     /**
      * @param ListMapper $listMapper
@@ -51,10 +55,23 @@ class PageAdmin extends AbstractAdmin
             ->end()
             ->with('Options', ['class' => 'col-md-4 pull-right'])
                 ->add('path')
-                ->add('template')
+                ->add('template', ChoiceType::class, ['choices' => $this->getTemplateData()])
             ->end()
 
         ;
+    }
+
+    protected function getTemplateData()
+    {
+        $finder = new Finder();
+        $finder->files()->in($this->getTemplateDirectory());
+
+        $data = [];
+        foreach ($finder as $file) {
+            $data[$file->getRelativePathname()] = $file->getFilename();
+        }
+
+        return $data;
     }
 
     /**
@@ -77,5 +94,15 @@ class PageAdmin extends AbstractAdmin
         }
 
         return parent::getTemplate($name);
+    }
+
+    public function setTemplateDirectory($templateDirectory)
+    {
+        $this->templateDirectory = $templateDirectory;
+    }
+
+    public function getTemplateDirectory()
+    {
+        return $this->templateDirectory;
     }
 }

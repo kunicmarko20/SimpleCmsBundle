@@ -19,4 +19,6 @@ services:
         arguments: [~, KunicMarko\SimpleCmsBundle\Entity\Page, SimpleCmsBundle:PageAdminCRUD]
         tags:
             - { name: sonata.admin, manager_type: orm, group: CMS, label: Page }
+        calls:
+            - [ setTemplateDirectory, ["%simple_cms.template_directory%"] ]
 
