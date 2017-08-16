@@ -7,13 +7,6 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
-    private $rootDirectory;
-
-    public function  __construct($rootDirectory)
-    {
-        $this->rootDirectory = $rootDirectory;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -24,7 +17,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('template_directory')
-                    ->defaultValue($this->rootDirectory . '/Resources/views')
+                    ->defaultValue('%kernel.root_dir%/Resources/views')
                 ->end()
             ->end();
 

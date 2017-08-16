@@ -14,8 +14,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * Class Customer
- * @package AppBundle\Entity
+ * Class Page
+ * @package KunicMarko\SimpleCmsBundle\Entity
  * @ORM\Entity()
  * @UniqueEntity(fields="title", message="Title is already taken.")
  * @UniqueEntity(fields="path", message="Url is already taken.")
@@ -199,13 +199,13 @@ class Page
      */
     public function onPersistUpdate()
     {
-        if ($this->createdAt == null) {
+        if ($this->createdAt === null) {
             $this->createdAt = new \DateTime();
         }
 
         $this->updatedAt = new \DateTime();
 
-        if ($this->path == null) {
+        if ($this->path === null) {
             $slugify = new Slugify();
             $this->setPath($slugify->slugify($this->name));
         }
@@ -213,7 +213,7 @@ class Page
 
     public function __toString()
     {
-        if ($this->name != null) {
+        if ($this->name !== null) {
             return $this->name;
         }
         return 'Page';
