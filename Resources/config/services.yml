@@ -8,7 +8,7 @@ services:
 
     simple_cms.routing_cache_handler.listener:
         class: KunicMarko\SimpleCmsBundle\EventListener\RoutingCacheHandler
-        arguments: ["@kernel", "@request_stack"]
+        arguments: ["@kernel", "@request_stack", "@filesystem", "@logger"]
         tags:
             - { name: kernel.event_listener, event: sonata.admin.event.persistence.post_update, method: onPersistUpdateRemove }
             - { name: kernel.event_listener, event: sonata.admin.event.persistence.post_persist, method: onPersistUpdateRemove }

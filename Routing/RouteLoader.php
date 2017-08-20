@@ -44,7 +44,7 @@ class RouteLoader extends Loader
         foreach ($pages as $page) {
             $defaults = [
                 '_controller' => 'SimpleCmsBundle:Page:index',
-                'pageId' => $page->getId(),
+                'id' => $page->getId(),
             ];
             $route = new Route($page->getPath(), $defaults);
             $this->routes->add('simple_cms_page_' . $page->getId(), $route);

@@ -11,7 +11,7 @@
     ],
 
     "keywords": ["simple cms bundle","cms bundle", "symfony", "bundle","symfony cms", "sonata admin cms"],
-    "homepage": "https://github.com/kunicmarko20/simple-cms",
+    "homepage": "https://github.com/kunicmarko20/SimpleCmsBundle",
     "license": "MIT",
     "require": {
         "php": "^7.0",

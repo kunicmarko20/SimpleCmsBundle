@@ -17,7 +17,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * Class Page
  * @package KunicMarko\SimpleCmsBundle\Entity
  * @ORM\Entity()
- * @UniqueEntity(fields="title", message="Title is already taken.")
+ * @UniqueEntity(fields="name", message="Name is already taken.")
  * @UniqueEntity(fields="path", message="Url is already taken.")
  * @ORM\Table(name="simple_cms_page")
  * @ORM\HasLifecycleCallbacks()
@@ -76,18 +76,33 @@ class Page
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\NotBlank()
+     * @Assert\NotNull()
+     * @Assert\Length(
+     *      max = 255,
+     *      maxMessage = "Url cannot be longer than {{ limit }} characters"
+     * )
+     * @Assert\Regex(
+     *     pattern="/\%/",
+     *     match=false,
+     *     message="Your url cannot contain a % sign"
+     * )
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $path;
 
     /**
      *
-     * @ORM\ManyToOne(targetEntity="KunicMarko\SimplePageBuilderBundle\Entity\PageBuilder", cascade={"persist"})
+     * @ORM\ManyToOne(
+     *     targetEntity="KunicMarko\SimplePageBuilderBundle\Entity\PageBuilder",
+     *     cascade={"persist", "remove"}
+     * )
      * @ORM\JoinColumns({
-     *     @ORM\JoinColumn(name="simple_page_builder", referencedColumnName="id", onDelete="SET NULL")
+     *     @ORM\JoinColumn(name="simple_page_builder", referencedColumnName="id", onDelete="CASCADE")
      * })
      */
     private $pageBuilder;
+
     /**
      * @var \DateTime
      * @ORM\Column(type="datetime")
@@ -122,10 +137,13 @@ class Page
 
     /**
      * @param string $path
+     * @return Page
      */
     public function setPath($path)
     {
         $this->path = '/'. ltrim($path, '/');
+
+        return $this;
     }
 
     public function getPageBuilder()

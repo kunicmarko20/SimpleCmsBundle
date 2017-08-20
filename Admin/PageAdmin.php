@@ -27,7 +27,6 @@ class PageAdmin extends AbstractAdmin
             ->add('updatedAt')
             ->add('_action', null, array(
                 'actions' => array(
-                    'show' => array(),
                     'edit' => array(),
                     'delete' => array(),
                 ),
@@ -43,11 +42,7 @@ class PageAdmin extends AbstractAdmin
         $formMapper
             ->with('General', ['class' => 'col-md-8'])
                 ->add('name')
-                ->add('pageBuilder', 'sonata_type_model_list', [
-                    'btn_list' => false,
-                    'btn_add' => "Add",
-                    'required' => false
-                ])
+                ->add('pageBuilder', 'sonata_type_admin')
             ->end()
             ->with('Seo', ['class' => 'col-md-4'])
                 ->add('title')

@@ -8,25 +8,20 @@
 
 namespace KunicMarko\SimpleCmsBundle\Controller;
 
-use Doctrine\ORM\EntityRepository;
 use KunicMarko\SimpleCmsBundle\Entity\Page;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 
 class PageController extends Controller
 {
 
-    public function indexAction(Request $request, $pageId)
+    public function indexAction(Page $page)
     {
-        /** @var EntityRepository $pageRepository */
-        $pageRepository = $this->getDoctrine()->getManager()->getRepository(Page::class);
-
-        $page = $pageRepository->findOneBy(['id' => $pageId]);
-
         if (!$page) {
             throw $this->createNotFoundException('The page does not exist.');
         }
 
-        return $this->render($page->getTemplate(), ['object' => $page]);
+        $directory = $this->getParameter('simple_cms.template_directory');
+
+        return $this->render($directory . $page->getTemplate(), ['object' => $page]);
     }
 }
